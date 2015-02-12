@@ -3,28 +3,34 @@ package com.eddapps.banditkings;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Castle extends Sprite {
 	
-	Rectangle mRectangle;
+	int score = 0;
+	BitmapFont mScoreFont;
 	
 	public Castle(String texturePath, float scale, CastlePosition castlePosition){
 		super(new Texture(Gdx.files.internal(texturePath)));
-		mRectangle = new Rectangle();
+		mScoreFont = new BitmapFont(Gdx.files.internal("arial.fnt"));
+		mScoreFont.setColor(Color.BLACK);
+		mScoreFont.setScale(0.7f);
 		setSize(getWidth() * scale, getHeight() * scale);
 		setPosition(castlePosition);
 	}
 	
-	public void debugDraw(ShapeRenderer shapeRenderer){
-		shapeRenderer.setColor(Color.BLUE);
-		shapeRenderer.rect(mRectangle.x, mRectangle.y, mRectangle.width, mRectangle.height);
+	public void draw(SpriteBatch spriteBatch){
+		super.draw(spriteBatch);
+		mScoreFont.draw(spriteBatch, String.valueOf(score), getX() + getWidth()/2, getY() + getHeight() + mScoreFont.getCapHeight());
 	}
 	
-	public boolean overlaps(Rectangle other){
-		return mRectangle.overlaps(other);
+	public void debugDraw(ShapeRenderer shapeRenderer){
+		shapeRenderer.setColor(Color.BLUE);
+		shapeRenderer.rect(getBoundingRectangle().x, getBoundingRectangle().y, getBoundingRectangle().width, getBoundingRectangle().height);
 	}
 	
 	private void setPosition(CastlePosition castlePosition) {
@@ -33,10 +39,10 @@ public class Castle extends Sprite {
 		}else if(castlePosition == CastlePosition.RIGHT){
 			setPosition(Gdx.graphics.getWidth() - getWidth() * getScaleX(), 0.0f);
 		}
-		mRectangle.set(getX(), getY(), getWidth(), getHeight());
+		//getBoundingRectangle().set(getX(), getY(), getWidth(), getHeight());
 	}
 
-	public Rectangle getRectangle(){ return mRectangle; }
+	public Rectangle getRectangle(){ return getBoundingRectangle(); }
 	
 	public enum CastlePosition{
 		LEFT, RIGHT;

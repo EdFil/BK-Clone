@@ -38,16 +38,28 @@ public class BanditKingsGame extends ApplicationAdapter {
 	@Override
 	public void render () {
 		mCamera.update();
-		mBagDropper.update();
 		mBluePlayer.update();
+		mBagDropper.update();
 				
-		if(mCastleLeft.overlaps(mBluePlayer.getRectangle())){
+		if(mCastleLeft.getBoundingRectangle().overlaps(mBluePlayer.getBoundingRectangle())){
 			mBluePlayer.setPosition(mCastleLeft.getX() + mCastleLeft.getWidth(), mBluePlayer.getY());
+			if(mBluePlayer.isHoldingBag()){
+				mCastleLeft.score++;
+				mBluePlayer.deleteBag();
+			}
 		}
-		if(mCastleRight.overlaps(mBluePlayer.getRectangle())){
+		if(mCastleRight.getBoundingRectangle().overlaps(mBluePlayer.getBoundingRectangle())){
 			mBluePlayer.setPosition(mCastleRight.getX() - mBluePlayer.getWidth(), mBluePlayer.getY());
 		}
 		
+		if(!mBluePlayer.isHoldingBag()){
+			Bag bag = mBagDropper.getOverlappingBag(mBluePlayer);
+			if(bag != null){
+				mBluePlayer.setBag(bag);
+				bag.mBluePlayer = mBluePlayer;
+			}
+		}
+			
 		Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
@@ -66,6 +78,7 @@ public class BanditKingsGame extends ApplicationAdapter {
         
         mCastleLeft.debugDraw(mShapeRenderer);
         mCastleRight.debugDraw(mShapeRenderer);
+        mBluePlayer.debugDraw(mShapeRenderer);
         
         mShapeRenderer.end();
 		
