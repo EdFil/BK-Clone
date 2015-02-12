@@ -7,14 +7,16 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.eddapps.banditkings.Castle.CastlePosition;
 
 public class BanditKingsGame extends ApplicationAdapter {
 	
 	ShapeRenderer mShapeRenderer;
 	SpriteBatch mSpriteBatch;
 	
-	CastleLeft mCastleLeft;
-	CastleRight mCastleRight;
+	Castle mCastleLeft;
+	Castle mCastleRight;
+	BluePlayer mBluePlayer;
 	
 	OrthographicCamera mCamera;
 	
@@ -25,15 +27,24 @@ public class BanditKingsGame extends ApplicationAdapter {
 		mCamera = new OrthographicCamera();
 		mCamera.setToOrtho(false, 800, 480);
 
-		mCastleLeft = new CastleLeft();
-		mCastleRight = new CastleRight();
+		mBluePlayer = new BluePlayer();
+		mCastleLeft = new Castle("Castle Blue.png", 0.5f, CastlePosition.LEFT);
+		mCastleRight = new Castle("Castle Red.png", 0.5f, CastlePosition.RIGHT);
 		
 	}
 
 	@Override
 	public void render () {
 		mCamera.update();
+		mBluePlayer.update();
 				
+		if(mCastleLeft.overlaps(mBluePlayer.getRectangle())){
+			mBluePlayer.setPosition(mCastleLeft.getX() + mCastleLeft.getWidth(), mBluePlayer.getY());
+		}
+		if(mCastleRight.overlaps(mBluePlayer.getRectangle())){
+			mBluePlayer.setPosition(mCastleRight.getX() - mBluePlayer.getWidth(), mBluePlayer.getY());
+		}
+		
 		Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
@@ -42,6 +53,7 @@ public class BanditKingsGame extends ApplicationAdapter {
 	    
 		mCastleLeft.draw(mSpriteBatch);
 		mCastleRight.draw(mSpriteBatch);
+		mBluePlayer.draw(mSpriteBatch);
 		
         mSpriteBatch.end();
         
