@@ -17,6 +17,7 @@ public class BanditKingsGame extends ApplicationAdapter {
 	Castle mCastleLeft;
 	Castle mCastleRight;
 	BluePlayer mBluePlayer;
+	BagDropper mBagDropper;
 	
 	OrthographicCamera mCamera;
 	
@@ -27,6 +28,7 @@ public class BanditKingsGame extends ApplicationAdapter {
 		mCamera = new OrthographicCamera();
 		mCamera.setToOrtho(false, 800, 480);
 
+		mBagDropper = new BagDropper();
 		mBluePlayer = new BluePlayer();
 		mCastleLeft = new Castle("Castle Blue.png", 0.5f, CastlePosition.LEFT);
 		mCastleRight = new Castle("Castle Red.png", 0.5f, CastlePosition.RIGHT);
@@ -36,6 +38,7 @@ public class BanditKingsGame extends ApplicationAdapter {
 	@Override
 	public void render () {
 		mCamera.update();
+		mBagDropper.update();
 		mBluePlayer.update();
 				
 		if(mCastleLeft.overlaps(mBluePlayer.getRectangle())){
@@ -54,6 +57,7 @@ public class BanditKingsGame extends ApplicationAdapter {
 		mCastleLeft.draw(mSpriteBatch);
 		mCastleRight.draw(mSpriteBatch);
 		mBluePlayer.draw(mSpriteBatch);
+		mBagDropper.draw(mSpriteBatch);
 		
         mSpriteBatch.end();
         
